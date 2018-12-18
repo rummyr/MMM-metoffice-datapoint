@@ -106,7 +106,7 @@ Credit where credit is due, this is a modified version of [MMM-darksky-hourly]ht
     <tr>
       <td><code>updateInterval</code></td>
       <td>How often does the content needs to be fetched? (Milliseconds)<br>
-        <br>metoffice TODO enforces a TODO request limit, so if you run your mirror constantly, anything below 90,000 (every 1.5 minutes) may require payment information or be blocked.<br>
+        <br>metoffice enforces a 5000 per day (I think) request limit, so if you run your mirror constantly, anything below 60,000 (every 1 minute) puts you at risk of being blocked.<br>
         <br><b>Possible values:</b> <code>1000</code> - <code>86400000</code>
         <br><b>Default value:</b> <code>600000</code> (10 minutes)
       </td>

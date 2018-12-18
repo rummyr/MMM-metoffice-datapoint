@@ -29,8 +29,15 @@ Module.register("MMM-metoffice-datapoint", {
       enableHighAccuracy: true,
       timeout: 5000
     },
-    latitude:  null,
-    longitude: null,
+	  position: null,
+	  // {
+	  // latitude:  null,
+    	  // longitude: null,
+	  // }
+	  // {
+	  // siteId: null,
+	  // regionId: null,
+	  // }
     maxHoursForecast: 8,   // maximum number of rows (3 hour intervals so 8 = 1 full day) to show in forecast
     showHighWinds: true, // show a windy icon if Speed or gust is over the limits windGustOver OR windSpeedOver
     windGustOver: 40,
@@ -116,9 +123,9 @@ Module.register("MMM-metoffice-datapoint", {
   },
 
   shouldLookupGeolocation: function () {
-    return this.config.locationId == null 
-	   && this.config.latitude == null 
-	   && this.config.longitude == null;
+    return this.config.position.siteId== null 
+	   && this.config.position.latitude == null 
+	   && this.config.position.longitude == null;
   },
 
   start: function () {
@@ -126,6 +133,10 @@ Module.register("MMM-metoffice-datapoint", {
 
     if (this.shouldLookupGeolocation()) {
       this.getLocation();
+    }
+//TODO in the right place please!
+    if (this.config.position.siteId== null) {
+	    this.sendSocketNotification("FIND_METOFFICE_SITE", { lat: this.config.position.latitude, lon: this.config.position.longitude, key: this.config.apiKey});
     }
     this.scheduleUpdate(this.config.initialLoadDelay);
   },
@@ -141,21 +152,17 @@ Module.register("MMM-metoffice-datapoint", {
 
     var units = this.config.unitTable[this.config.units] || 'auto';
 
-    var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.locationId + "?res=3hourly&key=" + this.config.apiKey;
-    var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.regionId + "?key=" + this.config.apiKey;
-    Log.info("Asking for " + url);
-    Log.info("Regional URL " + regionalURL);
-    if (this.config.data) {
-      // for debugging
-      this.processWeather(this.config.data);
-    } else {
-      //TODO: should use node-helper.js!
+    if (this.config.position.siteId) {
+	var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.position.siteId + "?res=3hourly&key=" + this.config.apiKey;
+    	Log.info("Asking for " + url);
 	this.sendSocketNotification('GET_METOFFICE_DATAPOINT', { 'url': url });
-	this.sendSocketNotification('GET_METOFFICE_REGIONAL_TEXT', {'url': regionalURL });
-	this.scheduleUpdate();
-
-      // metoffice doesn't support JSONP getJSONP(url, this.processWeather.bind(this), this.processWeatherError.bind(this));
     }
+    if (this.config.position.regionId) {
+    	var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.position.regionId + "?key=" + this.config.apiKey;
+    	Log.info("Regional URL " + regionalURL);
+	this.sendSocketNotification('GET_METOFFICE_REGIONAL_TEXT', {'url': regionalURL });
+    }
+    this.scheduleUpdate();
   },
 
   socketNotificationReceived: function(notification, payload) {
@@ -176,7 +183,31 @@ Module.register("MMM-metoffice-datapoint", {
 		this.updateDom(this.config.animationSpeed);
 
 	}
-	if (notification === "METOFFICE_DATAPOINT_RESULT") {
+	else if (notification === "METOFFICE_SITE_ID_LOOKEDUP") {
+		console.log("SiteID found:" + JSON.stringify(payload));
+		if (payload.siteId) {
+			if (!this.config.position) {
+				this.config.position = {};
+			}
+			this.config.position.siteId = payload.siteId;
+			if (this.config.position.regionId) {
+				this.updateWeather();
+			}
+		}
+	}
+	else if (notification === "METOFFICE_REGION_ID_LOOKEDUP") {
+		console.log("RegionId found:" + JSON.stringify(payload));
+		if (payload.regionId) {
+			if (!this.config.position) {
+				this.config.position = {};
+			}
+			this.config.position.regionId = payload.regionId;
+			if (this.config.position.siteId) {
+				this.updateWeather();
+			}
+		}
+	}
+	else if (notification === "METOFFICE_DATAPOINT_RESULT") {
 		// convert payload to something that darksky would have presented
 		var processedData = {
 			'forecastDate': moment(payload.SiteRep.DV.dataDate),
@@ -273,9 +304,16 @@ Module.register("MMM-metoffice-datapoint", {
       wrapper.className = "dimmed light small";
       return wrapper;
     }
+    // if they provide a lat/lng we should use that!
+    if ((this.config.siteId == null || this.config.position.regionId == null)
+	    && (this.config.position.latitude==null || this.config.position.longitude == null)) {
+	    wrapper.innerHTML = "You must provide a pair of position.<i>siteId</i>+<i>regionId</i> OR position.<i>latitude</i>+<i>longitude</i> in the config for module: " + this.name + ".";
+	    wrapper.className = "dimmed light small";
+	    return wrapper;
+    }
 
     if (this.geoLocationLookupFailed) {
-      wrapper.innerHTML = "Geolocaiton lookup failed, please set <i>latitude</i> and <i>longitude</i> in the config for module: " + this.name + ".";
+      wrapper.innerHTML = "Geolocation lookup failed, please set position.<i>latitude</i> and <i>longitude</i> in the config for module: " + this.name + ".";
       wrapper.className = "dimmed light small";
       return wrapper;
     }
@@ -497,8 +535,9 @@ Module.register("MMM-metoffice-datapoint", {
         if (self.config.debug) {
           console.log("geolocation success", location);
         }
-        self.config.latitude  = location.coords.latitude;
-        self.config.longitude = location.coords.longitude;
+	self.config.position = {};
+        self.config.position.latitude  = location.coords.latitude;
+        self.config.position.longitude = location.coords.longitude;
         self.geoLocationLookupSuccess = true;
       },
       function (error) {
