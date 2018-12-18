@@ -6,12 +6,9 @@ This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) tha
   <thead><tr><td>default</td><td>compact</td><td>all columns</td></tr></thead>
   <tbody>
     <tr>
-      <td>
-![defaults](screenshots/metoffice-defaults.png "default display")</td>
-      <td>
-![compact](screenshots/metoffice-defaults-compact.png "compact display")</td>
-      <td>
-![All Columns Shown](screenshots/metoffice-allOn-compact.png "all columns shown")</td>
+      <td><img src="screenshots/metoffice-defaults.png" /></td>
+      <td><img src="screenshots/metoffice-defaults-compact.png" /></td>
+      <td><img src="screenshots/metoffice-allOn-compact.png" /></td>
     </tr>
   </tbody>
   </table>
