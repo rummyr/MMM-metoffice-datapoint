@@ -35,15 +35,21 @@ Credit where credit is due, this is a modified version of [MMM-darksky-hourly]ht
       </td>
     </tr>
     <tr>
+      <td><code>locationId and regionId lookup</code></td>
+    <tr>
       <td><code>locationId</code></td>
-      <td>The MetOffice Datapoint location id, finding this is not trivial
-        <br> This value is <b>REQUIRED</b>
+      <td>This value is <b>REQUIRED</b>
+        <br> The MetOffice Datapoint location id, finding this is not trivial, future updates may improve on this
+        <br>you need to search http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=[KEY]
+        <br>You might be able to use https://www.metoffice.gov.uk/public/data/services/locations/v3/nearest/latlong?latitude=59&longitude=0&n=6&filter=none Plug in your lat/lng and look for 
+        <br>"sspaId" - this is the locationId
       </td>
     </tr>
     <tr>
       <td><code>regionId</code></td>
-      <td>The MetOffice Datapoint region id for the "summary" information finding this is not trivial
-        <br> This value is <b>REQUIRED</b>
+      <td>This value is <b>REQUIRED</b>
+        <br> The MetOffice Datapoint region id for the "summary" information finding this is not trivial, future updates may improve on this.
+        <br>You need to search http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/sitelist?key=[KEY]
       </td>
     </tr>
     <tr>
