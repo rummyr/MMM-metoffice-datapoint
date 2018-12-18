@@ -13,8 +13,8 @@ This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) tha
   </tbody>
   </table>
 
-This is a heavily modified version of [MMM-darksky-hourly]https://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a hjeavily modded version of another module!
-Standing on the Shoulders of Giants
+Credit where credit is due, this is a modified version of [MMM-darksky-hourly]https://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a "heavily modified version of MMM-forecast-io".
+
 
 ## Using the module
 
@@ -35,8 +35,20 @@ Standing on the Shoulders of Giants
       </td>
     </tr>
     <tr>
+      <td><code>locationId</code></td>
+      <td>The MetOffice Datapoint location id, finding this is not trivial
+        <br> This value is <b>REQUIRED</b>
+      </td>
+    </tr>
+    <tr>
+      <td><code>regionId</code></td>
+      <td>The MetOffice Datapoint region id for the "summary" information finding this is not trivial
+        <br> This value is <b>REQUIRED</b>
+      </td>
+    </tr>
+    <tr>
       <td><code>units</code></td>
-      <td>What units to use. Specified by config.js<br>
+      <td><strong>IGNORED - not yet implemented</strong>What units to use. Specified by config.js<br>
         <br><b>Possible values:</b> <code>config.units</code> = Specified by config.js, <code>default</code> = Kelvin, <code>metric</code> = Celsius, <code>imperial</code> =Fahrenheit
         <br><b>Default value:</b> <code>config.units</code>
       </td>
