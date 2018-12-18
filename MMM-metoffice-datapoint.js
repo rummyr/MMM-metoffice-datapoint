@@ -12,6 +12,9 @@ Module.register("MMM-metoffice-datapoint", {
     apiBase: "http://datapoint.metoffice.gov.uk/public/data/",
     forecastPath :  "val/wxfcs/all/" + "json/" ,
     regionalTextPath : "txt/wxfcs/regionalforecast/" + "json/",
+
+
+
     units: config.units,
     language: config.language,
     twentyFourHourTime: true,
@@ -29,15 +32,6 @@ Module.register("MMM-metoffice-datapoint", {
       enableHighAccuracy: true,
       timeout: 5000
     },
-	  position: null,
-	  // {
-	  // latitude:  null,
-    	  // longitude: null,
-	  // }
-	  // {
-	  // siteId: null,
-	  // regionId: null,
-	  // }
     maxHoursForecast: 8,   // maximum number of rows (3 hour intervals so 8 = 1 full day) to show in forecast
     showHighWinds: true, // show a windy icon if Speed or gust is over the limits windGustOver OR windSpeedOver
     windGustOver: 40,
@@ -123,49 +117,46 @@ Module.register("MMM-metoffice-datapoint", {
   },
 
   shouldLookupGeolocation: function () {
-    return this.config.position.siteId== null 
-	   && this.config.position.latitude == null 
-	   && this.config.position.longitude == null;
+	   return this.config.latitude == null 
+	   && this.config.longitude == null;
   },
 
   start: function () {
-    Log.info("Starting module: " + this.name);
+    this.info("Starting module: " + this.name);
 
     if (this.shouldLookupGeolocation()) {
       this.getLocation();
     }
 //TODO in the right place please!
-    if (this.config.position.siteId== null) {
-	    this.sendSocketNotification("FIND_METOFFICE_SITE", { lat: this.config.position.latitude, lon: this.config.position.longitude, key: this.config.apiKey});
+    if (this.config.siteName && this.config.apiKey) {
+	var url = this.config.apiBase + '/' +  this.config.forecastPath + 'sitelist?key=' + this.config.apiKey;
+    	this.sendSocketNotification("FIND_METOFFICE_SITE_ID_BY_NAME", { siteName: this.config.siteName, 'url': url});    
     }
+
     this.scheduleUpdate(this.config.initialLoadDelay);
   },
 
   updateWeather: function () {
-    if (this.geoLocationLookupFailed) {
-      return;
-    }
-//    if (this.shouldLookupGeolocation() && !this.geoLocationLookupSuccess) {
-//      this.scheduleUpdate(1000); // try again in one second
-//      return;
-//    }
 
     var units = this.config.unitTable[this.config.units] || 'auto';
 
-    if (this.config.position.siteId) {
-	var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.position.siteId + "?res=3hourly&key=" + this.config.apiKey;
-    	Log.info("Asking for " + url);
+    if (this.config.siteId) {
+	var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.siteId + "?res=3hourly&key=" + this.config.apiKey;
+    	this.info("Asking for " + url);
 	this.sendSocketNotification('GET_METOFFICE_DATAPOINT', { 'url': url });
     }
-    if (this.config.position.regionId) {
-    	var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.position.regionId + "?key=" + this.config.apiKey;
-    	Log.info("Regional URL " + regionalURL);
+    if (this.config.regionId) {
+    	var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.regionId + "?key=" + this.config.apiKey;
+    	this.info("Regional URL " + regionalURL);
 	this.sendSocketNotification('GET_METOFFICE_REGIONAL_TEXT', {'url': regionalURL });
     }
     this.scheduleUpdate();
   },
 
   socketNotificationReceived: function(notification, payload) {
+	if (notification === 'METOFFICE_PROBLEM') {
+		this.info("Problem seen at the far end:" + payload.msg);
+	}
 	if (notification === 'METOFFICE_REGIONAL_TEXT_RESULT') {
 		this.regional  = {
 			'headline' : payload.RegionalFcst.FcstPeriods.Period[0].Paragraph[0].$,
@@ -184,25 +175,23 @@ Module.register("MMM-metoffice-datapoint", {
 
 	}
 	else if (notification === "METOFFICE_SITE_ID_LOOKEDUP") {
-		console.log("SiteID found:" + JSON.stringify(payload));
+		this.debug("SiteID found:" + JSON.stringify(payload));
 		if (payload.siteId) {
-			if (!this.config.position) {
-				this.config.position = {};
-			}
-			this.config.position.siteId = payload.siteId;
-			if (this.config.position.regionId) {
+			this.config.siteId = payload.siteId;
+			if (this.config.regionId) {
 				this.updateWeather();
+			} else {
+				var url = this.config.apiBase + '/' +  this.config.regionalTextPath + 'sitelist?key=' + this.config.apiKey;
+				this.sendSocketNotification("FIND_METOFFICE_REGION_ID_BY_CODE", { regionCode: payload.regionCode, 'url': url});    
+
 			}
 		}
 	}
 	else if (notification === "METOFFICE_REGION_ID_LOOKEDUP") {
-		console.log("RegionId found:" + JSON.stringify(payload));
+		this.debug("RegionId found:" + JSON.stringify(payload));
 		if (payload.regionId) {
-			if (!this.config.position) {
-				this.config.position = {};
-			}
-			this.config.position.regionId = payload.regionId;
-			if (this.config.position.siteId) {
+			this.config.regionId = payload.regionId;
+			if (this.config.siteId) {
 				this.updateWeather();
 			}
 		}
@@ -262,7 +251,7 @@ Module.register("MMM-metoffice-datapoint", {
 
   processTextForecast: function (data) {
 	  if (this.config.debug) {
-		  console.log('textForecast',data);
+		  this.debug('textForecast',data);
 	  }
 	  this.textForecast = data;
 	  this.updateDom(this.config.animationSpeed);
@@ -272,7 +261,7 @@ Module.register("MMM-metoffice-datapoint", {
 
   processWeather: function (data) {
     if (this.config.debug) {
-      console.log('weather data', data);
+      this.debug('weather data', data);
     }
     this.loaded = true;
     this.weatherData = data;
@@ -283,7 +272,7 @@ Module.register("MMM-metoffice-datapoint", {
 
   processWeatherError: function (error) {
     if (this.config.debug) {
-      console.log('process weather error', error);
+      this.debug('process weather error', error);
     }
     // try later
     // this.scheduleUpdate();
@@ -305,17 +294,17 @@ Module.register("MMM-metoffice-datapoint", {
       return wrapper;
     }
     // if they provide a lat/lng we should use that!
-    if ((this.config.siteId == null || this.config.position.regionId == null)
-	    && (this.config.position.latitude==null || this.config.position.longitude == null)) {
-	    wrapper.innerHTML = "You must provide a pair of position.<i>siteId</i>+<i>regionId</i> OR position.<i>latitude</i>+<i>longitude</i> in the config for module: " + this.name + ".";
+    if (this.config.siteName == null) {
+	    wrapper.innerHTML = "You must provide a siteName";
 	    wrapper.className = "dimmed light small";
 	    return wrapper;
     }
 
-    if (this.geoLocationLookupFailed) {
-      wrapper.innerHTML = "Geolocation lookup failed, please set position.<i>latitude</i> and <i>longitude</i> in the config for module: " + this.name + ".";
-      wrapper.className = "dimmed light small";
-      return wrapper;
+
+    if (!this.config.siteId) {
+	    wrapper.innerHTML = "Loading .. Looking up siteId for " + this.config.siteName;
+	    wrapper.className = "dimmed light small";
+	    return wrapper;
     }
 
     if (!this.loaded) {
@@ -533,16 +522,15 @@ Module.register("MMM-metoffice-datapoint", {
     navigator.geolocation.getCurrentPosition(
       function (location) {
         if (self.config.debug) {
-          console.log("geolocation success", location);
+          this.debug("geolocation success", location);
         }
-	self.config.position = {};
-        self.config.position.latitude  = location.coords.latitude;
-        self.config.position.longitude = location.coords.longitude;
+        self.config.latitude  = location.coords.latitude;
+        self.config.longitude = location.coords.longitude;
         self.geoLocationLookupSuccess = true;
       },
       function (error) {
         if (self.config.debug) {
-          console.log("geolocation error", error);
+          this.debug("geolocation error", error);
         }
         self.geoLocationLookupFailed = true;
         self.updateDom(self.config.animationSpeed);
@@ -569,13 +557,18 @@ Module.register("MMM-metoffice-datapoint", {
 
     var self = this;
     if (this.pendingTimeoutID) {
-	console.log("Cancelled pendingTimeoutID:" + this.pendingTimeoutID);
+	this.debug("Cancelled pendingTimeoutID:" + this.pendingTimeoutID);
 	clearTimeout(this.pendingTimeoutID);
     }
     this.pendingTimeoutID = setTimeout(function() {
       self.pendingTimeoutID = undefined;
       self.updateWeather();
     }, nextLoad);
-  }
-
+  },
+  debug: function(str) {
+     console.log(this.name + ":DEBUG:" + str);
+  },
+  info: function(str) {
+     console.log(this.name + ":INFO:" + str);
+  },
 });
