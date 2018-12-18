@@ -310,7 +310,7 @@ Module.register("MMM-metoffice-datapoint", {
 	    summaryText = "";
     }
     var summary = document.createElement("div");
-    summary.className = "small dimmed summary";
+    summary.className = "small summary";
     summary.innerHTML = summaryText;
 
     if (this.textForecast && this.textForecast.now) {
