@@ -4,7 +4,7 @@ This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) tha
 
 ![screenshot](screenshot.png)
 
-This is a heavily modified version of [MMM-darksky-hourlyhttps://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a hjeavily modded version of another module!
+This is a heavily modified version of [MMM-darksky-hourly]https://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a hjeavily modded version of another module!
 Standing on the Shoulders of Giants
 
 ## Using the module
@@ -37,6 +37,15 @@ Standing on the Shoulders of Giants
       <td>Whether to use 24-hour format time or not<br>
         <br><b>Possible values:</b> <code>true</code> = Time presented as XX:00, <code>false</code> = Time present as XXam/pm
         <br><b>Default value:</b> <code>true</code>
+      </td>
+    </tr> 
+     <tr>
+      <td><code>compact</code></td>
+      <td>a more compact view, adds the compact style to each row, for customization<br>
+        e.g. <code>.MMM-metoffice-datapoint .compact {
+             line-height: 1.1em;
+        }</code>
+        <br><b>Default value:</b> <code>false</code>
       </td>
     </tr> 
     <tr>
@@ -144,32 +153,5 @@ Standing on the Shoulders of Giants
         <br><b>Default value:</b>  <code>true</code>
       </td>
     </tr>    
-    </tbody>
-
-			units: config.units,
-			language: config.language,
-    	twentyFourHourTime: true,
-    showCurrent: false, // for the moment not available in metoffice (no weather warnings neither!
-    showSummary: true,
-    	showPrecipitationPossibilityInRow: true,
-    	showDayInRow: true,
-    	showIconInRow: true,
-    	updateInterval: 10 * 60 * 1000, // every 10 minutes
-    	animationSpeed: 1000,
-    	initialLoadDelay: 0, // 0 seconds delay
-    	retryDelay: 2500,
-    tempDecimalPlaces: 0, // round temperatures to this many decimal places
-    geoLocationOptions: {
-      enableHighAccuracy: true,
-      timeout: 5000
-    },
-    latitude:  null,
-    longitude: null,
-    	maxHoursForecast: 8,   // maximum number of rows (3 hour intervals so 8 = 1 full day) to show in forecast
-    showHighWinds: true, // show a windy icon if Speed or gust is over the limits windGustOver OR windSpeedOver
-    windGustOver: 40,
-    windSpeedOver: 20,
-    showWindSpeed: true,
-    showWindGust: false,
-    showWindUnits: false,
-    showWindDirection: true,
+ </tbody>
+</table>
