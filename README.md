@@ -5,10 +5,10 @@ This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) tha
 <table>
   <thead><tr><td>default</td><td>compact</td><td>all columns</td></tr></thead>
   <tbody>
-    <tr style="background-color:black">
-      <td><img src="screenshots/metoffice-defaults.png" /></td>
-      <td><img src="screenshots/metoffice-defaults-compact.png" /></td>
-      <td><img src="screenshots/metoffice-allOn-compact.png" /></td>
+    <tr style="valign:center;">
+      <td style="background-color:black;"><img src="screenshots/metoffice-defaults.png" /></td>
+      <td style="background-color:black;"><img src="screenshots/metoffice-defaults-compact.png" /></td>
+      <td style="background-color:black;"><img src="screenshots/metoffice-allOn-compact.png" /></td>
     </tr>
   </tbody>
   </table>
@@ -19,11 +19,11 @@ Credit where credit is due, this is a modified version of [MMM-darksky-hourly]ht
 ## Using the module
 
 ### Providing your location
-You can provide your location in a number of different ways
+You can provide your location in a number of different ways, first ones *override* later ones
 * siteName -- as found on https://www.metoffice.gov.uk/
 * siteId -- if you know your datapoint SiteId (if looked up this is printed to the console)
 * regionId -- this is optional, it will be looked up for the siteId, but you can avoid a lookup if you really want
-
+* latitude and longitude -- the nearest siteId and regionId will be found from this
 ## Configuration options
 <table width="100%">
   <!-- table suffering... -->
