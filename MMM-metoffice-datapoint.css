@@ -1,0 +1,92 @@
+.MMM-metoffice-datapoint {
+}
+
+.MMM-metoffice-datapoint .big-icon {
+  font-size: 75%;
+  line-height: 65px;
+  display: inline-block;
+  -ms-transform: translate(0, -3px); /* IE 9 */
+  -webkit-transform: translate(0, -3px); /* Safari */
+  transform: translate(0, -3px);
+}
+
+.MMM-metoffice-datapoint .summary {
+  width: 400px;
+}
+
+.MMM-metoffice-datapoint .forecast {
+  text-align: right;
+  min-width: 400px;
+  margin-top: 1ex;
+}
+
+.MMM-metoffice-datapoint .forecast-row {
+}
+
+.MMM-metoffice-datapoint .compact {
+	line-height: 1.1em;
+}
+.MMM-metoffice-datapoint .forecast-row>span {
+  display: table-cell;
+  width: 1px;
+}
+
+.MMM-metoffice-datapoint .forecast-row .forecast-day {
+  text-align: left;
+  padding-right: 0.1em;
+}
+
+.MMM-metoffice-datapoint .forecast-row .forecast-hour {
+  text-align: right;
+  padding-right: 0.6em;
+}
+
+.MMM-metoffice-datapoint .forecast-row .weathericon {
+  text-align: center;
+  padding-right: 0.5em;
+}
+
+.MMM-metoffice-datapoint .forecast-bar {
+  display: table;
+  overflow: hidden;
+}
+
+.MMM-metoffice-datapoint .forecast-bar>span {
+  display: table-cell;
+  text-align: center;
+}
+
+.MMM-metoffice-datapoint .forecast-bar .bar {
+  background-color: #aaa;
+  line-height: 0.8em;
+  border-radius: 1em;
+  border: 0.5ex transparent solid;
+  background-clip: padding-box;
+  color: black;
+}
+
+.small.MMM-metoffice-datapoint .forecast {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.small.MMM-metoffice-datapoint .summary {
+  width: 300px;
+}
+
+.MMM-metoffice-datapoint .windDir {
+	padding-right: 0.00em;
+	padding-left:  0.20em;
+}
+
+.MMM-metoffice-datapoint .windStrong {
+	padding-left: 0.15em;
+}
+.MMM-metoffice-datapoint .wind {
+	text-align:left;
+}
+.MMM-metoffice-datapoint .temp {
+	padding-left:0.1em;
+}
+
+
