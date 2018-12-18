@@ -1,6 +1,13 @@
 # MMM-metoffice-datapoint
 Magic Mirror Module to pull 3 hourly data from the UK Met Office Datapoint API
+This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) that adds localized weather using the [UK MetOffice Datapoint API](https://www.metoffice.gov.uk/datapoint).
 
+![screenshot](screenshot.png)
+
+This is a heavily modified version of [MMM-darksky-hourlyhttps://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a hjeavily modded version of another module!
+Standing on the Shoulders of Giants
+
+## Using the module
 
 ## Configuration options
 <table width="100%">
@@ -95,13 +102,48 @@ Magic Mirror Module to pull 3 hourly data from the UK Met Office Datapoint API
         <br><b>Default value:</b>  <code>8</code>
       </td>
     </tr>    
-    showHighWinds: true, // show a windy icon if Speed or gust is over the limits windGustOver OR windSpeedOver
-    windGustOver: 40,
-    windSpeedOver: 20,
-    showWindSpeed: true,
-    showWindGust: false,
-    showWindUnits: false,
-    showWindDirection: true,
+    <tr>
+      <td><code>showHighWinds</code></td>
+      <td>Show a 'windy' icon if the wind speed or wind gust is over the limits windGustOver OR windSpeedOver<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>windGustOver</code></td>
+      <td>Used to decide if the winds are 'High'<br>
+        <br><b>Default value:</b>  <code>40</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>windSpeedOver</code></td>
+      <td>Used to decide if the winds are 'High'<br>
+        <br><b>Default value:</b>  <code>20</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>showWindSpeed</code></td>
+      <td>Show the wind speed column<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>showWindGust</code></td>
+      <td>Show the wind gust column<br>
+        <br><b>Default value:</b>  <code>false</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>showWindUnits</code></td>
+      <td>Show the wind units<br>
+        <br><b>Default value:</b>  <code>false</code>
+      </td>
+    </tr>    
+    <tr>
+      <td><code>showWindDirection</code></td>
+      <td>Show the wind direction arrow<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>    
     </tbody>
 
 			units: config.units,
