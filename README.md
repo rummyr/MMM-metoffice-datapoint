@@ -2,9 +2,19 @@
 Magic Mirror Module to pull 3 hourly data from the UK Met Office Datapoint API
 This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) that adds localized weather using the [UK MetOffice Datapoint API](https://www.metoffice.gov.uk/datapoint).
 
-![defaults](screenshots/metoffice-defaults.png "defaults")
-![compact](screenshots/metoffice-defaults-compact.png "compact")
-![All Columns Shown](metoffice-allOn-compact.png "all columns shown")
+<table>
+  <thead><tr><td>default</td><td>compact</td><td>all columns</td></tr></thead>
+  <tbody>
+    <tr>
+      <td>
+![defaults](screenshots/metoffice-defaults.png "default display")</td>
+      <td>
+![compact](screenshots/metoffice-defaults-compact.png "compact display")</td>
+      <td>
+![All Columns Shown](screenshots/metoffice-allOn-compact.png "all columns shown")</td>
+    </tr>
+  </tbody>
+  </table>
 
 This is a heavily modified version of [MMM-darksky-hourly]https://github.com/jacquesCedric/MMM-darksky-hourly) which is itself a hjeavily modded version of another module!
 Standing on the Shoulders of Giants
