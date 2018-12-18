@@ -39,6 +39,15 @@ Standing on the Shoulders of Giants
         <br><b>Default value:</b> <code>true</code>
       </td>
     </tr> 
+     <tr>
+      <td><code>compact</code></td>
+      <td>a more compact view, adds the compact style to each row, for customization<br>
+        e.g. <code>.MMM-metoffice-datapoint .compact {
+             line-height: 1.1em;
+        }</code>
+        <br><b>Default value:</b> <code>false</code>
+      </td>
+    </tr> 
     <tr>
       <td><code>showPrecipitationPossibilityInRow</code></td>
       <td>Show chance of precipitation at each hour<br>
