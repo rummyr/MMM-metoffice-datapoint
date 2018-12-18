@@ -208,18 +208,20 @@ module.exports = NodeHelper.create({
 	var siteId = "unfound";
 	var siteRegion = "unfound";
 	for (var i=0;i<arry.length;i++) {
-		if (arry[i].name == name) {
+		if (arry[i].name.toUpperCase() == name.toUpperCase()) {
 			siteId = arry[i].id;
 			siteRegion = arry[i].region;
+			this.debug("Found Site: " + siteId + " in region " + siteRegion);
+			return { 'siteId': siteId, 'region': siteRegion };
 		}
 	}
-	this.debug("Found Site: " + siteId + " in region " + siteRegion);
-	return { 'siteId': siteId, 'region': siteRegion };
+	this.debug("Couldnt find site " + name);
+	return ;
    },
    getRegionIdByCode: function(region, arry) {
 	this.debug("Looking up " + region + " in the array of length " + arry.length);
 	for (var i=0;i<arry.length;i++) {
-		if (arry[i]['@name'] == region) {
+		if (arry[i]['@name'].toUpperCase() == region.toUpperCase()) {
 			this.debug("found regionId: " + arry[i]['@id']);
 			return { 'regionId': arry[i]['@id'] } ;
 		}
