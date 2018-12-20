@@ -176,17 +176,15 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
     </tr> 
      <tr>
       <td><code>compact</code></td>
-      <td>a more compact view, adds the compact style to each row, for customization<br>
-        e.g. <code>.MMM-metoffice-datapoint .compact {
-             line-height: 1.1em;
-        }</code>
+      <td>a more compact view, adds the compact style to each row, reducing the screen space used.<br>
         <br><b>Values:</b> <code>true</code>/<code>false</code>
         <br><b>Default:</b><code>false</code>
       </td>
     </tr> 
     <tr>
       <td><code>units</code></td>
-      <td><strong>IGNORED - not yet implemented</strong>What units to use. Specified by config.js<br>
+      <td><strong>IGNORED - not yet implemented</strong>
+        <br>What units to use. Specified by config.js<br>
         <br><b>Possible values:</b> <code>config.units</code> = Specified by config.js, <code>default</code> = Kelvin, <code>metric</code> = Celsius, <code>imperial</code> =Fahrenheit
         <br><b>Default value:</b> <code>config.units</code>
       </td>
@@ -241,13 +239,15 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
       <th colspan="3">Other ways of defining location</th>
     </tr>
     <tr>
-      <td><code>debugShowIds</code> default: <code>false</code>
+      <td><code>debugShowIds</code></td>
+      <td>default: <code>false</code>
         <br>IF implemented this will show your siteId and regionId
+      </td>
     </tr>
     <tr>
       <td><code>siteId</code> and <code>regionId</code></td>
       <td><i>Very optional</i>
-        <br>You can provide these instead of a siteName, see Advanced Location Setting above
+        <br>You can provide these instead of a siteName, see Advanced Location Setting above<br>
         <br><b>Values:</b> <code>usually a number</code>
         <br><b>Default:</b>NONE 
       </td>
@@ -255,7 +255,7 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
     <tr>
       <td><code>latitude</code> and <code>longitude</code></td>
       <td><i>Very optional</i>
-        <br>You can provide these instead of a siteName, see Advanced Location Setting above
+        <br>You can provide these instead of a siteName, see Advanced Location Setting above<br>
         <br>NOTE: this does NOT avoid the 2 initial lookups made to the MetOffice on page load.
         <br><b>Values:</b> <code>usually a number</code>
         <br><b>Default:</b>NONE 
