@@ -159,8 +159,22 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
         <br><b>Values:</b> <code>a positive number</code></code>
         <br><b>Default:</b><code>8</code>
       </td>
-    </tr>    
+    </tr>
     <tr>
+      <td><code>showWhenForecastUpdatedByMO</code></td>
+      <td>Show a relative time that the forecast was last updated by the metOffice
+        <br><b>Values:</b> <code>true</code>/<code>false</code>
+        <br><b>Default:</b><code>true</code>  
+       </td>
+     </tr>
+    <tr>
+      <td><code>showWhenForecastPulledByMM</code></td>
+      <td>Show a relative time that the forecast was last **retreived** from the metOffice
+        <br><b>Values:</b> <code>true</code>/<code>false</code>
+        <br><b>Default:</b><code>false</code>  
+       </td>
+     </tr>
+     <tr>
       <td><code>language</code></td>
       <td>The language of the weather text.<br>
         <br><b>Possible values:</b> <code>en</code>, <code>nl</code>, <code>ru</code>, etc ...
