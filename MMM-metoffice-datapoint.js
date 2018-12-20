@@ -389,7 +389,7 @@ Module.register("MMM-metoffice-datapoint", {
 		if (dateOfForecast.innerHTML != "") {
 			dateOfForecast.innerHTML += "<br>";
 		}
-		dateOfForecast.innerHTML +=  "got " + this.weatherData.pulledDate.fromNow();
+		dateOfForecast.innerHTML +=  "got " + this.weatherData.pulledDate.format("HH:mm");
 	}
     }
        
