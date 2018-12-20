@@ -168,7 +168,7 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
        </td>
      </tr>
     <tr>
-      <td><code>showWhenForecastPulledByMM</code></td>
+      <td><code>showWhenForecastUpdatedByMM</code></td>
       <td>Show a relative time that the forecast was last **retreived** from the metOffice
         <br><b>Values:</b> <code>true</code>/<code>false</code>
         <br><b>Default:</b><code>false</code>  
