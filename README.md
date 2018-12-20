@@ -94,7 +94,7 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
       </td>
     </tr>
     <tr>
-      <td>Time</td>
+      <td><del>time</del></td>
       <td>Not hideable, 12 or 24 hour format set by <code>twentyFourHourTime</code></td>
     </tr>
     <tr>
@@ -112,7 +112,7 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
       </td>
     </tr>    
     <tr>
-      <td>Temperature</td>
+      <td><del>temperature</del></td>
       <td>Not hideable</td>
     </tr>
     <tr>
