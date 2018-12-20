@@ -1,6 +1,6 @@
 # MMM-metoffice-datapoint
 Magic Mirror Module to show 3 hourly data from the UK Met Office Datapoint API
-This an extension for [MagicMirror](https://github.com/MichMich/MagicMirror) that adds localized weather using the <a href="https://www.metoffice.gov.uk/datapoint" target="_blank">UK MetOffice Datapoint API</a>).
+This an extension for [MagicMirror](https://magicmirror.builders/) that adds localized weather using the <a href="https://www.metoffice.gov.uk/datapoint" target="_blank">UK MetOffice Datapoint API</a>).
 
 <table>
   <thead><tr><td>default</td><td>compact</td><td>all columns</td></tr></thead>
@@ -18,8 +18,9 @@ Credit where credit is due, this is a modified version of [MMM-darksky-hourly](h
 
 ## About the Data Source used
 
-The UK Met Office provide a public API, called DataPoint, that this module uses for its data source. The forecasts are for many sites (5,000) around the UK and are given for 3 hour samples. Use of this data requiers me to state that:
+The UK Met Office provide a public API, called DataPoint, that this module uses for its data source. The forecasts are for many sites (5,000) around the UK and are given for 3 hour samples. 
 
+Use of this data requires me to state that:
 **This module "Contains public sector information licensed under the Open Government Licence".**
 
 
@@ -46,10 +47,10 @@ The absolute minimum configuration requires you to
 * Sign up to the DataPoint API (follow Register on <a href="https://www.metoffice.gov.uk/datapoint/" target="_blank">https://www.metoffice.gov.uk/datapoint/</a>)
 * Get your API key (linked from <a href="https://www.metoffice.gov.uk/datapoint/api" target="_blank">https://www.metoffice.gov.uk/datapoint/api</a>)
 * Edit it into the “apiKey” field of the configuration
-* Find your nearest “Site”, I would recommend going to <a href="https://www.metoffice.gov.uk" target="_blank"></a> and use the search.
+* Find your nearest “Site”, I would recommend going to <a href="https://www.metoffice.gov.uk" target="_blank">the MetOffice site</a> and use the search.
 * Edit this into the siteName field of the configuration
 
-### Advanced Location Setting – siteId,regionId, latitude, longitude
+#### Advanced Location Setting – siteId,regionId, latitude, longitude
 
 The DataPoint API actually uses something I call a siteId to retrieve the 3 hourly forecasts, and a regionId to retrieve the general text forecast. The module finds these 2 ids by running 2 queries against the MetOffice site and looking for a site matching the siteName. It does this for you.
 
@@ -80,8 +81,8 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
         <br>The name the MetOffice Datapoint gives the location you want to use for forecasts. You can find this by going to  <a href="https://www.metoffice.gov.uk" target="_blank">MetOffice Site</a> and using the search.
       </td>
     </tr>
-    <tr colspan="3">
-      <th>Display Settings show/hide (left to right)</th>
+    <tr>
+      <th  colspan="3">Display Settings show/hide (left to right)</th>
     </tr>
     <tr>
       <td><code>showDayInRow</code></td>
@@ -142,8 +143,8 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
         <br><b>Default value:</b>  <code>true</code>
       </td>
     </tr>    
-    <tr colspan="3">
-      <th>Display Settings other</th>
+    <tr>
+      <th  colspan="3">Display Settings other</th>
     </tr>
     <tr>
       <td><code>maxHoursForecast TODO change name</code></td>
@@ -193,8 +194,8 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
         <br><b>Default value:</b>  <code>20</code>
       </td>
     </tr>    
-    <tr colspan="3">
-      <th>Timings</th>
+    <tr>
+      <th colspan="3">Timings</th>
     </tr>
     <tr>
       <td><code>updateInterval</code></td>
@@ -225,8 +226,12 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
         <br><b>Default value:</b>  <code>2500</code>
       </td>
     </tr>    
-    <tr colspan="3">
-      <th>Other ways of defining location</th>
+    <tr>
+      <th colspan="3">Other ways of defining location</th>
+    </tr>
+    <tr>
+      <td><code>debugShowIds</code> default: <code>false</code>
+        <br>IF implemented this will show your siteId and regionId
     </tr>
     <tr>
       <td><code>siteId</code> and <code>regionId</code></td>
