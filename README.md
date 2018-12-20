@@ -60,7 +60,6 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
 
 ## Configuration options
 
-### REQUIRED settings
 <table width="100%">
   <thead>
     <tr>
@@ -69,6 +68,9 @@ There is an (undocumented) alternative to using siteName, and that is to leave t
     </tr>
   <thead>
   <tbody>
+    <tr>
+      <th  colspan="3">REQUIRED</th>
+    </tr>
     <tr>
       <td><code>apiKey</code></td>
       <td>The <a href="https://www.metoffice.gov.uk/datapoint/" target="_blank">MetOffice Datapoint API Key</a>, which can be obtained by creating an account on the metoffice site.<br>
