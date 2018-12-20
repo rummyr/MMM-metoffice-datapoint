@@ -24,6 +24,8 @@ Module.register("MMM-metoffice-datapoint", {
     showPrecipitationPossibilityInRow: true,
     showDayInRow: true,
     showIconInRow: true,
+    showWhenForecastUpdatedByMO: true,
+    showWhenForecastUpdatedByMM: false,
     updateInterval: 10 * 60 * 1000, // every 10 minutes
     animationSpeed: 1000,
     initialLoadDelay: 0, // 0 seconds delay
@@ -99,7 +101,9 @@ Module.register("MMM-metoffice-datapoint", {
     },
 
     debug: false,
-    // debugShowIds: true,
+    info: true,
+    logNotifications: true,
+    debugShowIds: false,
     pendingTimeoutID: undefined,
   },
 
@@ -118,21 +122,19 @@ Module.register("MMM-metoffice-datapoint", {
     return ["weather-icons.css", "MMM-metoffice-datapoint.css", "weather-icons-wind.css"];
   },
 
-  shouldLookupGeolocation: function () {
-	   return this.config.latitude == null 
-	   && this.config.longitude == null;
-  },
 
   start: function () {
     this.info("Starting module: " + this.name);
 
-    if (this.shouldLookupGeolocation()) {
-      this.getLocation();
-    }
 //TODO in the right place please!
-    if (this.config.siteName && this.config.apiKey) {
-	var url = this.config.apiBase + '/' +  this.config.forecastPath + 'sitelist?key=' + this.config.apiKey;
-    	this.sendSocketNotification("FIND_METOFFICE_SITE_ID_BY_NAME", { siteName: this.config.siteName, 'url': url});    
+
+    // if we DONT have both ids AND we *do* have a siteName+apiKey
+    if (!this.config.siteId || !this.config.regionId) {
+	    if (this.config.siteName && this.config.apiKey) {
+		var url = this.config.apiBase + '/' +  this.config.forecastPath + 'sitelist?key=' + this.config.apiKey;
+		this.notification("Send:'FIND_METOFFICE_SITE_ID_BY_NAME'");
+	    	this.sendSocketNotification("FIND_METOFFICE_SITE_ID_BY_NAME", { siteName: this.config.siteName, 'url': url});    
+    	}
     }
 
     this.scheduleUpdate(this.config.initialLoadDelay);
@@ -144,18 +146,22 @@ Module.register("MMM-metoffice-datapoint", {
 
     if (this.config.siteId) {
 	var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.siteId + "?res=3hourly&key=" + this.config.apiKey;
-    	this.info("Asking for " + url);
+    	this.debug("Asking for " + url);
+	this.notification("Send:'GET_METOFFICE_DATAPOINT'");
 	this.sendSocketNotification('GET_METOFFICE_DATAPOINT', { 'url': url });
     }
     if (this.config.regionId) {
     	var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.regionId + "?key=" + this.config.apiKey;
-    	this.info("Regional URL " + regionalURL);
+    	this.debug("Regional URL " + regionalURL);
+	this.notification("Send:'GET_METOFFICE_REGIONAL_TEXT'");
 	this.sendSocketNotification('GET_METOFFICE_REGIONAL_TEXT', {'url': regionalURL });
     }
     this.scheduleUpdate();
   },
 
   socketNotificationReceived: function(notification, payload) {
+	this.notification("Received Notification:"+notification);
+	
 	if (notification === 'METOFFICE_PROBLEM') {
 		this.info("Problem seen at the far end:" + payload.msg);
 		//TODO show problems
@@ -185,6 +191,7 @@ Module.register("MMM-metoffice-datapoint", {
 			this.updateWeather();
 			if (!this.config.regionId) {
 				var url = this.config.apiBase + '/' +  this.config.regionalTextPath + 'sitelist?key=' + this.config.apiKey;
+				this.notification("Send:'FIND_METOFFICE_REGION_ID_BY_CODE'");
 				this.sendSocketNotification("FIND_METOFFICE_REGION_ID_BY_CODE", { regionCode: payload.regionCode, 'url': url});    
 			}
 		}
@@ -201,6 +208,7 @@ Module.register("MMM-metoffice-datapoint", {
 		// convert payload to something that darksky would have presented
 		var processedData = {
 			'forecastDate': moment(payload.SiteRep.DV.dataDate),
+			'pulledDate' : moment(),
 			'alerts': 'alerts TBD',
 			'currently': {
 				//'temperature': -1,
@@ -371,9 +379,20 @@ Module.register("MMM-metoffice-datapoint", {
 
 
     var dateOfForecast = document.createElement("div");
-    dateOfForecast.className = "dimmed summary small"; // removed dimmed
-    dateOfForecast.innerHTML = "@" + this.weatherData.forecastDate.format("HH:mm");
-    dateOfForecast.innerHTML = "Updated about " + this.weatherData.forecastDate.fromNow();
+    if (this.config.showWhenForecastUpdatedByMO || this.config.showForecastUpdatedByMM) {
+	dateOfForecast.className = "summary small";
+    	dateOfForecast.innerHTML = "";
+	if (this.config.showWhenForecastUpdatedByMO) {
+	    	dateOfForecast.innerHTML = "Forecast from about " + this.weatherData.forecastDate.fromNow();
+	}
+	if (this.config.showWhenForecastUpdatedByMM) {
+		if (dateOfForecast.innerHTML != "") {
+			dateOfForecast.innerHTML += "<br>";
+		}
+		dateOfForecast.innerHTML +=  "got " + this.weatherData.pulledDate.fromNow();
+	}
+    }
+       
 
 //    wrapper.appendChild(dateOfForecast);
 
@@ -543,27 +562,6 @@ Module.register("MMM-metoffice-datapoint", {
     return display;
   },
 
-  getLocation: function () {
-    var self = this;
-    navigator.geolocation.getCurrentPosition(
-      function (location) {
-        if (self.config.debug) {
-          this.debug("geolocation success", location);
-        }
-        self.config.latitude  = location.coords.latitude;
-        self.config.longitude = location.coords.longitude;
-        self.geoLocationLookupSuccess = true;
-      },
-      function (error) {
-        if (self.config.debug) {
-          this.debug("geolocation error", error);
-        }
-        self.geoLocationLookupFailed = true;
-        self.updateDom(self.config.animationSpeed);
-      },
-      this.config.geoLocationOptions);
-  },
-
 // Round the temperature based on tempDecimalPlaces
   roundTemp: function (temp) {
     var scalar = 1 << this.config.tempDecimalPlaces;
@@ -592,9 +590,18 @@ Module.register("MMM-metoffice-datapoint", {
     }, nextLoad);
   },
   debug: function(str) {
-     console.log(this.name + ":DEBUG:" + str);
+     if (this.config.debug) {
+     	console.log(this.name + ":DEBUG:" + str);
+     }
   },
   info: function(str) {
-     console.log(this.name + ":INFO:" + str);
+     if (this.config.info) {
+	     console.log(this.name + ":INFO:" + str);
+     }
+  },
+  notification: function(str) {
+	  if (this.config.logNotifications) {
+		  console.log(this.name + ":NOTIFICATION:" + str);
+	  }
   },
 });
