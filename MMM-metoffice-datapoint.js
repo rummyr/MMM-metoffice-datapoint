@@ -19,6 +19,7 @@ Module.register("MMM-metoffice-datapoint", {
     language: config.language,
     twentyFourHourTime: true,
     showCurrent: false, // for the moment not available in metoffice (no weather warnings neither!
+    showSiteName: false, //TODO implement!
     showSummary: true,
     showPrecipitationPossibilityInRow: true,
     showDayInRow: true,
@@ -98,6 +99,7 @@ Module.register("MMM-metoffice-datapoint", {
     },
 
     debug: false,
+    // debugShowIds: true,
     pendingTimeoutID: undefined,
   },
 
@@ -156,6 +158,7 @@ Module.register("MMM-metoffice-datapoint", {
   socketNotificationReceived: function(notification, payload) {
 	if (notification === 'METOFFICE_PROBLEM') {
 		this.info("Problem seen at the far end:" + payload.msg);
+		//TODO show problems
 	}
 	if (notification === 'METOFFICE_REGIONAL_TEXT_RESULT') {
 		this.regional  = {
@@ -171,19 +174,18 @@ Module.register("MMM-metoffice-datapoint", {
 
 		}
 		this.processTextForecast(this.regional);
-		this.updateDom(this.config.animationSpeed);
+		//processTextForecast calls updateDom() this.updateDom(this.config.animationSpeed);
 
 	}
 	else if (notification === "METOFFICE_SITE_ID_LOOKEDUP") {
 		this.debug("SiteID found:" + JSON.stringify(payload));
 		if (payload.siteId) {
 			this.config.siteId = payload.siteId;
-			if (this.config.regionId) {
-				this.updateWeather();
-			} else {
+			this.updateDom(this.config.animationSpeed);
+			this.updateWeather();
+			if (!this.config.regionId) {
 				var url = this.config.apiBase + '/' +  this.config.regionalTextPath + 'sitelist?key=' + this.config.apiKey;
 				this.sendSocketNotification("FIND_METOFFICE_REGION_ID_BY_CODE", { regionCode: payload.regionCode, 'url': url});    
-
 			}
 		}
 	}
@@ -191,9 +193,8 @@ Module.register("MMM-metoffice-datapoint", {
 		this.debug("RegionId found:" + JSON.stringify(payload));
 		if (payload.regionId) {
 			this.config.regionId = payload.regionId;
-			if (this.config.siteId) {
-				this.updateWeather();
-			}
+			this.updateDom();
+			this.updateWeather();
 		}
 	}
 	else if (notification === "METOFFICE_DATAPOINT_RESULT") {
@@ -244,9 +245,9 @@ Module.register("MMM-metoffice-datapoint", {
 		} // for each day
                 //this.processWeather(payload);
 		this.processWeather(processedData);
-	        this.updateDom(this.config.animationSpeed);
+	        // processWeather calls updateDom() this.updateDom(this.config.animationSpeed);
 	 }
-         this.updateDom(this.config.initialLoadDelay);
+          // don't need to update dom on general messages do we? this.updateDom(this.config.initialLoadDelay);
   },
 
   processTextForecast: function (data) {
@@ -346,6 +347,28 @@ Module.register("MMM-metoffice-datapoint", {
     	//TODO: actually put this somewhere
     }
 
+    var idSection = document.createElement("div");
+
+    if (this.config.debugShowIds) {
+	var text = "";
+	text += " siteId:";
+	if (this.config.siteId) {
+		text += this.config.siteId;
+	} else {
+		text += "undefined";
+	}
+
+	text += " regionId:";
+	if (this.config.regionId) {
+		text += this.config.regionId;
+	} else {
+		text += "undefined";
+	}
+
+	idSection.innerHTML = text;
+	idSection.className = "bright";
+    }
+
 
     var dateOfForecast = document.createElement("div");
     dateOfForecast.className = "dimmed summary small"; // removed dimmed
@@ -356,6 +379,9 @@ Module.register("MMM-metoffice-datapoint", {
 
     if(this.config.showCurrent) {
 	    wrapper.appendChild(large);
+    }
+    if (this.config.debugShowIds) {
+	    wrapper.appendChild(idSection);
     }
     if (this.config.showSummary) {
 	    wrapper.appendChild(summary);
