@@ -50,7 +50,7 @@ module.exports = NodeHelper.create({
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 var result = JSON.parse(body);
-                this.debug(response.statusCode); // for checking
+                // this.debug(response.statusCode); // for checking
                 this.sendSocketNotification('METOFFICE_REGIONAL_TEXT_RESULT', result);
             } else if (error) {
                 console.log(this.name + " there was an error:" + error);
@@ -65,11 +65,9 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function(notification, payload) {
 	this.debug("Received notification:" + notification);
         if (notification === 'GET_METOFFICE_DATAPOINT') {
-	    this.debug("MMM-metoffice-datapoint: Notification received: " + notification);
             this.getWeather(payload.url);
         }
 	if (notification === 'GET_METOFFICE_REGIONAL_TEXT') {
-	    this.debug("Notification received: " + notification);
 	    this.getRegionalText(payload.url);
 	}
         if (notification === 'CONFIG') {
@@ -88,9 +86,9 @@ module.exports = NodeHelper.create({
         	}, (error, response, body) => {
             		if (!error && response.statusCode == 200) {
         	    		var result = JSON.parse(body);
-				this.debug(response.statusCode);
+				// this.debug(response.statusCode);
 				//this.debug("Body" + body);
-				this.debug(response.statusCode);
+				// this.debug(response.statusCode);
 				var info = this.getSiteByName(siteName,result.Locations.Location);
 				if (!info || !info.siteId || !info.region) {
 					this.info("Couldn't find " + siteName);
@@ -120,9 +118,9 @@ module.exports = NodeHelper.create({
         	}, (error, response, body) => {
             		if (!error && response.statusCode == 200) {
         	    		var result = JSON.parse(body);
-				this.debug(response.statusCode);
+				// this.debug(response.statusCode);
 				//this.debug("Body" + body);
-				this.debug(response.statusCode);
+				//this.debug(response.statusCode);
 				var info = this.getRegionIdByCode(regionCode,result.Locations.Location);
 				if (!info || !info.regionId) {
 					this.verbose("Couldn't find " + regionCode);
@@ -155,9 +153,9 @@ module.exports = NodeHelper.create({
         	}, (error, response, body) => {
             	if (!error && response.statusCode == 200) {
         	    	 var result = JSON.parse(body);
-			this.debug(response.statusCode);
+			//this.debug(response.statusCode);
 			//this.debug("Body" + body);
-			this.debug(response.statusCode);
+			//this.debug(response.statusCode);
 			var info = this.getNearestSite(lat,lon,result.Locations.Location);
 			this.debug("siteID:" + info.siteId + " region:" + info.region);
 			this.sendSocketNotification("METOFFICE_SITE_ID_LOOKEDUP", { 'siteId': info.siteId} );
@@ -240,9 +238,9 @@ module.exports = NodeHelper.create({
         	}, (error, response, body) => {
             	if (!error && response.statusCode == 200) {
         	    	 var result = JSON.parse(body);
-			this.debug(response.statusCode);
-			this.debug("Body" + body);
-			this.debug(response.statusCode);
+			//this.debug(response.statusCode);
+			//this.debug("Body" + body);
+			//this.debug(response.statusCode);
 			var arry = result.Locations.Location;
 			for (var i=0;i<arry.length;i++) {
 				if (arry[i]['@name'] == region) {
