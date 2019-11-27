@@ -14,6 +14,8 @@ module.exports = NodeHelper.create({
     config: {
 	    debug: true,
 	    verbose: true,
+	    info: true,
+	    error: true,
     },
 
     start: function() {
@@ -99,8 +101,11 @@ module.exports = NodeHelper.create({
 				}
 			} // end not error status 200
 			else if (error) {
+				this.error("Got an error " + error + " for " + payload.url);
 				this.sendSocketNotification("METOFFICE_PROBLEM", { msg: 'An error ocurred getting the site list:' + error});
 			} else {
+				this.error("Got a failed response code " + response.statusCode + " for " + payload.url
+					+ "\n BODY:" + body); 
 				this.sendSocketNotification("METOFFICE_PROBLEM", { msg: 'An error response was returned:' + body + 'Status:' + response.statusCode})
 			}
 		});
@@ -184,6 +189,18 @@ module.exports = NodeHelper.create({
 		    console.log(new Date().toISOString().substring(11) + ":VERBOSE:" + this.name + " " + str);
 	    }
    },
+   info: function(str) {
+	if (this.config && this.config.info) {
+		    console.log(new Date().toISOString().substring(11) + ":INFO:" + this.name + " " + str);
+	    }
+    },
+    error: function(str) {
+ 	    if (this.config && this.config.error) {
+		    console.log(new Date().toISOString().substring(11) + ":ERROR:" + this.name + " " + str);
+	    }
+   },
+   
+  
 	
    getNearestSite: function(lat,lon, arry) {
 	this.debug("getNearestSite called, lat:" + lat + " lon:" + lon + "and an array of length:" + arry.length);

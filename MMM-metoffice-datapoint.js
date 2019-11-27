@@ -131,7 +131,7 @@ Module.register("MMM-metoffice-datapoint", {
     // if we DONT have both ids AND we *do* have a siteName+apiKey
     if (!this.config.siteId || !this.config.regionId) {
 	    if (this.config.siteName && this.config.apiKey) {
-		var url = this.config.apiBase + '/' +  this.config.forecastPath + 'sitelist?key=' + this.config.apiKey;
+		var url = this.config.apiBase +  this.config.forecastPath + 'sitelist?key=' + this.config.apiKey;
 		this.notification("Send:'FIND_METOFFICE_SITE_ID_BY_NAME'");
 	    	this.sendSocketNotification("FIND_METOFFICE_SITE_ID_BY_NAME", { siteName: this.config.siteName, 'url': url});    
     	}
@@ -145,13 +145,13 @@ Module.register("MMM-metoffice-datapoint", {
     var units = this.config.unitTable[this.config.units] || 'auto';
 
     if (this.config.siteId) {
-	var url = this.config.apiBase+'/'+ this.config.forecastPath + this.config.siteId + "?res=3hourly&key=" + this.config.apiKey;
+	var url = this.config.apiBase+ this.config.forecastPath + this.config.siteId + "?res=3hourly&key=" + this.config.apiKey;
     	this.debug("Asking for " + url);
 	this.notification("Send:'GET_METOFFICE_DATAPOINT'");
 	this.sendSocketNotification('GET_METOFFICE_DATAPOINT', { 'url': url });
     }
     if (this.config.regionId) {
-    	var regionalURL = this.config.apiBase + '/'+ this.config.regionalTextPath + this.config.regionId + "?key=" + this.config.apiKey;
+    	var regionalURL = this.config.apiBase +  this.config.regionalTextPath + this.config.regionId + "?key=" + this.config.apiKey;
     	this.debug("Regional URL " + regionalURL);
 	this.notification("Send:'GET_METOFFICE_REGIONAL_TEXT'");
 	this.sendSocketNotification('GET_METOFFICE_REGIONAL_TEXT', {'url': regionalURL });
@@ -190,7 +190,7 @@ Module.register("MMM-metoffice-datapoint", {
 			this.updateDom(this.config.animationSpeed);
 			this.updateWeather();
 			if (!this.config.regionId) {
-				var url = this.config.apiBase + '/' +  this.config.regionalTextPath + 'sitelist?key=' + this.config.apiKey;
+				var url = this.config.apiBase +  this.config.regionalTextPath + 'sitelist?key=' + this.config.apiKey;
 				this.notification("Send:'FIND_METOFFICE_REGION_ID_BY_CODE'");
 				this.sendSocketNotification("FIND_METOFFICE_REGION_ID_BY_CODE", { regionCode: payload.regionCode, 'url': url});    
 			}
